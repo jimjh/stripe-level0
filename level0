@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'set'
 
 # Our test cases will always use the same dictionary file (with SHA1
 # 6b898d7c48630be05b72b3ae07c5be6617f90d8e). Running `test/harness`
@@ -6,11 +7,18 @@
 # have it already.
 
 path = ARGV.length > 0 ? ARGV[0] : '/usr/share/dict/words'
-entries = File.read(path).split("\n")
+
+# set of words
+entries = Set.new
+File.open(path) do |file|
+  entries << file.readline.strip until file.eof?
+end
 
 contents = $stdin.read
+
+# whitelist filter - escape words that are not found in the white list
 output = contents.gsub(/[^ \n]+/) do |word|
-  if entries.include?(word.downcase)
+  if entries.include? word.downcase
     word
   else
     "<#{word}>"
