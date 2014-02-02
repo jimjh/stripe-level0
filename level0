@@ -1,19 +1,18 @@
 #!/usr/bin/env ruby
 require 'set'
+require 'simple_mmap'
 
 # Our test cases will always use the same dictionary file (with SHA1
 # 6b898d7c48630be05b72b3ae07c5be6617f90d8e). Running `test/harness`
 # will automatically download this dictionary for you if you don't
 # have it already.
 
-path = ARGV.length > 0 ? ARGV[0] : '/usr/share/dict/words'
+# path = ARGV.length > 0 ? ARGV[0] : '/usr/share/dict/words'
 
-# array of words
-entries = Set.new
-File.open(path) do |file|
-  entries << file.readline.strip until file.eof?
-end
+map = SimpleMmap::FileWindow.new('set.dat')
+entries = Marshal.load map.read(4131405)
 
+# entries  = File.open('set.dat') { |file| Marshal.load file }
 contents = $stdin.read
 
 # whitelist filter - escape words that are not found in the white list
@@ -25,8 +24,3 @@ output = contents.gsub(/[^ \n]+/) do |word|
   end
 end
 print output
-
-# IDEAS
-# - use a hash instead of array to avoid linear scan
-# - streaming input and output, instead of bulk read/write
-# - rewrite (instead of gsub, do ltr word scan and map)
