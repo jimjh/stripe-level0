@@ -1,2 +1,9 @@
 #!/bin/bash
-exec java -server -Xms256M -Xloggc:./memory.log -verbose:gc -XX:+PrintGCDetails -cp out jim.SpellCheck
+exec java \
+  -server \
+  -Djava.awt.headless=true \
+  -Xms256M \
+  -XX:CompileThreshold=1400 \
+  -Xloggc:./memory.log -verbose:gc -XX:+PrintGCDetails \
+  -cp out \
+  jim.SpellCheck
