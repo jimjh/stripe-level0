@@ -1,2 +1,2 @@
 #!/bin/bash
-exec java -cp . SpellCheck
+exec java -server -Xms256M -Xloggc:./memory.log -verbose:gc -XX:+PrintGCDetails -cp out jim.SpellCheck

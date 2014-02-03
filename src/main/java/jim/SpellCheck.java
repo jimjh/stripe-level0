@@ -11,34 +11,36 @@ public class SpellCheck {
 
   private static final String PATH = "/usr/share/dict/words";
 
-  public static void main(String[] args) {
-
-    String path = (args.length >= 1) ? args[0] : PATH;
-
+  private static Set<String> readDict(String path) throws IOException {
     Set<String> words = new HashSet<>();
-    Path p = Paths.get(PATH);
+    Path p = Paths.get(path);
     try(BufferedReader reader = Files.newBufferedReader(p, StandardCharsets.UTF_8)) {
       String line;
       while((line = reader.readLine()) != null) words.add(line.trim());
-    } catch (IOException e) {
-      System.err.println("caught exception: " + e.getMessage());
-      e.printStackTrace(System.err);
     }
+    return words;
+  }
 
-    try(Scanner scanner = new Scanner(System.in, "UTF-8")) {
+  private static void filterInput(Set<String> words, InputStream input, PrintStream output) {
+    try(Scanner scanner = new Scanner(input, "UTF-8")) {
       scanner.useDelimiter("(?<=\\s)");
       while(scanner.hasNext()) {
         String match = scanner.next();
         String word  = match.substring(0, match.length() - 1);
         if (words.contains(word.toLowerCase())) {
-          System.out.print(word);
+          output.print(word);
         } else {
-          System.out.print("<" + word + ">");
+          output.print("<" + word + ">");
         }
-        System.out.print(match.charAt(match.length()-1));
+        output.print(match.charAt(match.length()-1));
       }
     }
+  }
 
+  public static void main(String[] args) throws IOException {
+    String path = (args.length >= 1) ? args[0] : PATH;
+    Set<String> words = readDict(path);
+    filterInput(words, System.in, System.out);
   }
 
 }
