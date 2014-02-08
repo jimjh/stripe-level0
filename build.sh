@@ -1,3 +1,3 @@
 #!/bin/sh
 
-# Add any build steps you need here
+javac -d out src/main/java/jim/SpellCheck.java
