@@ -11,8 +11,10 @@ public class SpellCheck {
 
   private static final String PATH = "/usr/share/dict/words";
 
+  private static final int CAPACITY = (int)(234937f / 0.7);
+
   private static Set<String> readDict(String path) throws IOException {
-    Set<String> words = new HashSet<>();
+    Set<String> words = new HashSet<>(CAPACITY);
     Path p = Paths.get(path);
     try(BufferedReader reader = Files.newBufferedReader(p, StandardCharsets.UTF_8)) {
       String line;
