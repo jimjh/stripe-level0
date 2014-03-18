@@ -1,3 +1,2 @@
 #!/bin/sh
-
-# Add any build steps you need here
+make level0
